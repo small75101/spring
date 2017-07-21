@@ -20,13 +20,13 @@ public class TestShiro01 {
 
         //1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager
         Factory<SecurityManager> factory =
-                new IniSecurityManagerFactory("classpath:com/ranq/spring4/ch4/shiro/shiro-realm.ini");
+                new IniSecurityManagerFactory("classpath:com/ranq/spring4/ch4/shiro/shiro-jdbc-realm.ini");
         //2、得到SecurityManager实例 并绑定给SecurityUtils
         SecurityManager securityManager = factory.getInstance();
         SecurityUtils.setSecurityManager(securityManager);
         //3、得到Subject及创建用户名/密码身份验证Token（即用户身份/凭证）
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken("admin1", "111111");
+        UsernamePasswordToken token = new UsernamePasswordToken("ranq", "111111");
 
         try {
             //4、登录，即身份验证
@@ -38,6 +38,9 @@ public class TestShiro01 {
 
         Assert.assertEquals(true, subject.isAuthenticated()); //断言用户已经登录
 
+        Assert.assertEquals(true, subject.hasRole("1")); //断言用户拥有角色
+
+        Assert.assertEquals(true, subject.isPermitted("1")); //断言用户拥有权限
         //6、退出
         subject.logout();
     }
