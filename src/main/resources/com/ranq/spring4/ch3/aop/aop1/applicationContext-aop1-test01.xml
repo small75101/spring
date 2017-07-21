@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 启用spring注解 -->
+	<!-- <context:annotation-config /> -->
+	<!-- 自动注入 -->
+	<!-- <context:component-scan base-package="com.aop1" /> -->
+	<bean id="human" class="com.ranq.spring4.ch3.aop.aop1.Human"></bean>
+	<bean id="sleepHelper" class="com.ranq.spring4.ch3.aop.aop1.SleepHelper"></bean>
+
+	<!-- 首先要做的是配置一个切点,据说切点的表示方式在Spring中有好几种，但是常用的只有两种：1.使用正则表达式 2.使用AspectJ表达式 -->
+	<bean id="sleepPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+		<!-- pattern属性指定了正则表达式，它匹配所有的sleep方法 -->
+		<property name="pattern" value=".*sleep" />
+	</bean>
+	<!--通知:切点仅仅是定义了故事发生的地点，还有故事发生的时间以及最重要的故事的内容,就是通知了，我们需要把通知跟切点结合起来 -->
+	<bean id="sleepHelperAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="sleepHelper" />
+		<property name="pointcut" ref="sleepPointcut" />
+	</bean>
+	<!--切入点和通知都配置完成，接下来该调用ProxyFactoryBean产生代理对象了 -->
+	<bean id="humanProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="human" />
+		<property name="interceptorNames" value="sleepHelperAdvisor" />
+		<property name="proxyInterfaces" value="com.ranq.spring4.ch3.aop.aop1.Sleepable" />
+	</bean>
+	<!-- ProxyFactoryBean是一个代理，我们可以把它转换为proxyInterfaces中指定的实现该interface的代理对象 -->
+</beans>

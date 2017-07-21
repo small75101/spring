@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+	<!-- 定义切面对象 -->
+	<bean id="security" class="com.ranq.spring4.ch3.aop.domain.Security" />
+
+	<!-- 1 非接口 -->
+	<!-- 创建目标对象 -->
+	<bean id="userDAO" class="com.ranq.spring4.ch3.aop.domain.UserDAOImpl" />
+	<!-- 1 非接口 -->
+
+	<bean id="deptDao" class="com.ranq.spring4.ch3.aop.domain.DeptDAOImpl" />
+	<!--所有切面和通知都须定义在aop:config内部 -->
+	<aop:config>
+		<!-- 配置切面 -->
+		<aop:aspect ref="security">
+			<!-- 声明切入点 -->
+			<aop:pointcut id="userDAOPointcut" expression="execution(* com.ranq.spring4.ch3.aop.domain..*.save*(..))" />
+			<!--声明前置通知,在匹配方法执行前运行 -->
+			<aop:before method="checkSecurity" pointcut-ref="userDAOPointcut" />
+		</aop:aspect>
+	</aop:config>
+
+
+
+</beans>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--通知-->
+    <bean id="log" class="com.ranq.spring4.ch3.advice.LogBeforeAdvice"/>
+    <!--切点对象-->
+    <bean id="timeBook" class="com.ranq.spring4.ch3.javaproxy.TimeBook"/>
+    <!--代理类-->
+    <bean id="logProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+            <property name="proxyInterfaces" value="com.ranq.spring4.ch3.javaproxy.TimeBookInterface"/>
+            <property name="target" ref="timeBook"/>
+            <property name="interceptorNames">
+                <list>
+                    <value>log</value>
+                </list>
+            </property>
+    </bean>
+</beans>

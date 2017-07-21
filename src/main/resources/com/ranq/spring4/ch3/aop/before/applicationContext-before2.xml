@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		                   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		                   http://www.springframework.org/schema/context 
+		                   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		                   http://www.springframework.org/schema/tx 
+		                   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		                   http://www.springframework.org/schema/aop 
+		                   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<bean id="greetingBefore" class="com.ranq.spring4.ch3.aop.domain.GreetingBeforeAdvice" />
+	<bean id="target" class="com.ranq.spring4.ch3.aop.domain.NativeWaterBizImpl" />
+	<bean id="waiter" class="org.springframework.aop.framework.ProxyFactoryBean" p:proxyInterfaces="com.ranq.spring4.ch3.aop.domain.IWaterBiz"
+		p:target-ref="target" p:proxyTargetClass="true">
+		<property name="interceptorNames">
+			<list>
+				<idref local="greetingBefore" />
+			</list>
+		</property>
+	</bean>
+	<!--p:interceptorNames="greetingBefore,greetingAfter" -->
+	<!-- ProxyFactoryBean 1.target:代理的目标对象 2.proxyInterfaces:需要植入目标对象的Bean列表，采用Bean的名称指定 3.singelton:返回大代理是否是单实例，默认为单实例 4.optinmize:当设置为true时，强制使用CGLib代理 
+		5.proxyTargetClass：是否对类进行代理(而不是对接口进行代理)， 设置为true时，使用CGLib代理 无须设置 p:proxyInterfaces属性 使用CGLib代理技术通过动态创建NaiveWaiter的子类来代理NaiveWaiter对象 -->
+
+</beans>

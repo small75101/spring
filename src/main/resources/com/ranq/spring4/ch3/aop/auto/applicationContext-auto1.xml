@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		                   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		                   http://www.springframework.org/schema/context 
+		                   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		                   http://www.springframework.org/schema/tx 
+		                   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		                   http://www.springframework.org/schema/aop 
+		                   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<bean id="greetingAfter" class="com.ranq.spring4.ch3.aop.domain.GreetingAfterAdvice" />
+	<bean id="nativeWaterBizImpl" class="com.ranq.spring4.ch3.aop.domain.NativeWaterBizImpl" />
+
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator" p:beanNames="*Impl" p:optimize="true">
+		<property name="interceptorNames">
+			<list>
+				<idref local="greetingAfter" />
+			</list>
+		</property>
+	</bean>
+	<!-- beanNames: -->
+	<!-- 1.用户指定一组需要自动代理的Bean名称，Bean名称可以使用*通配符，以Impl结尾将自动代理 -->
+	<!-- 2.但是最好设置value='nativeWaterBizImpl,nativeWater1BizImpl' -->
+	<!-- 3.一般情况下，不会为FactoryBean的Bean创建代理，如果需要则在beanNames中指定添加&的Bean名称 <property name='beanNames' value="&waiter"> -->
+	<!-- interceptorNames： -->
+	<!-- 指定一个或多个增强Bean的名称 -->
+	<!-- optimize： -->
+	<!-- 设置为true 将强制使用 CGLIb动态代理技术 -->
+</beans>
